@@ -16,7 +16,8 @@ App = React.createClass({
   // Loads items from the Tasks collection and puts them on this.data.tasks
   getMeteorData() {
     return {
-      logs: Logs.find({}, {sort: {createdAt: -1}}).fetch()
+      logs: Logs.find({}, {sort: {createdAt: -1}}).fetch(),
+      currentUser: Meteor.user()
     }
   },
 
@@ -36,7 +37,9 @@ App = React.createClass({
     
     Logs.insert({
       text: text,
-      createdAt: new Date() // current time
+      createdAt: new Date(), // current time
+      owner: Meteor.userId(), // id of logged in user (might want to move this to daily)
+      username: Meteor.user().username // username of logged in user
     });
  
     // Clear form
@@ -48,25 +51,31 @@ App = React.createClass({
       <div className="container">
         <header>
           <h1>Weighbook</h1>
-          <form className="new-log" onSubmit={this.handleSubmit} >
-            <select name="formLift" ref="lift" >
-                <option value="0">Select a Lift</option>
-                <option value={lifts[0].name}>{lifts[0]}</option>
-                <option value={lifts[1].name}>{lifts[1]}</option>
-                <option value={lifts[2].name}>{lifts[2]}</option>
-                <option value={lifts[3].name}>{lifts[3]}</option>
-                <option value={lifts[4].name}>{lifts[4]}</option>
-                <option value={lifts[5].name}>{lifts[5]}</option>
-                <option value={lifts[6].name}>{lifts[6]}</option>
-              </select> 
-            
-            <button type="submit">Add Lift</button>
-          </form>
-        </header>
+          <AccountsUIWrapper />
+ 
+          { this.data.currentUser ?
+            <form className="new-log" onSubmit={this.handleSubmit} >
+              <select name="formLift" ref="lift" >
+                  <option value="0">Select a Lift</option>
+                  <option value={lifts[0].name}>{lifts[0]}</option>
+                  <option value={lifts[1].name}>{lifts[1]}</option>
+                  <option value={lifts[2].name}>{lifts[2]}</option>
+                  <option value={lifts[3].name}>{lifts[3]}</option>
+                  <option value={lifts[4].name}>{lifts[4]}</option>
+                  <option value={lifts[5].name}>{lifts[5]}</option>
+                  <option value={lifts[6].name}>{lifts[6]}</option>
+                </select> 
+              
+              <button type="submit">Add Lift</button>
+            </form> : ''
+          }
 
-        <ul>
-          {this.renderLogs()}
-        </ul>
+        </header>
+        { this.data.currentUser ?
+          <ul>
+            {this.renderLogs()}
+          </ul> : ''
+      }
       </div>
     );
   }
