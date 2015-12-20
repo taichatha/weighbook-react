@@ -17,6 +17,7 @@ App = React.createClass({
   getMeteorData() {
     return {
       logs: Logs.find({}, {sort: {createdAt: -1}}).fetch(),
+      sets: Sets.find({}, {sort: {createdAt: -1}}).fetch(),
       currentUser: Meteor.user()
     }
   },
@@ -27,6 +28,48 @@ App = React.createClass({
         <Log key={log._id} log={log} />
         );
     });
+  },
+
+  renderAllLifts: function() {
+
+    var logs = this.data.logs;
+    var sets = this.data.sets;;
+    var thisSets = [];
+    var thisLifts = [];
+    for(var i = 0; i<logs.length; i++){
+      thisLifts.push(logs.text);
+      for(var j =0; j<sets.length; j++){
+        if(sets[j].log== logs[i]._id){
+          console.log("match");
+          thisSets.push(sets[j]);
+        }
+      }
+    // return this.data.sets.map((set) => {
+    //   return (
+    //     <Set key={set._id} log={set} />
+    //     );
+    // });
+    }
+
+    console.log(thisLifts);
+    console.log(thisSets);
+    console.log(logs);
+    console.log(Meteor.userId());
+    
+    // console.log(lifts[1].owner);
+    // console.log(lifts[1].sets);
+    var show = [];
+    var counter = 0;
+  //   for(var i= 0; i<sets.length; i++){
+  //     // console.log("true");
+  //     // show.push(<div>Logs.find({id: sets[i]._id)}
+  //     show.push(<Set key={sets[i]._id} sets={sets[i]} />);
+      
+  //   };
+  //   console.log(show);
+  //   return (<div>{show}</div>)
+
+
   },
 
   handleSubmit(event) {
@@ -73,9 +116,18 @@ App = React.createClass({
         </header>
         { this.data.currentUser ?
           <ul>
+
             {this.renderLogs()}
           </ul> : ''
       }
+
+      { this.data.currentUser ?
+        <div>
+          Hanh!
+          {this.renderAllLifts()}
+          </div>: ''
+      }
+
       </div>
     );
   }

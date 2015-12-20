@@ -27,20 +27,56 @@ Log = React.createClass({
     Logs.remove(this.props.log._id);
   },
 
+  addToWeight(event) {
+    event.preventDefault();
+    var weight = Number(React.findDOMNode(this.refs.weight).value.trim());
+    weight+= 5;
+    React.findDOMNode(this.refs.weight).value=weight;
+  },
+
+  subtractFromWeight(event) {
+    event.preventDefault();
+    var weight = Number(React.findDOMNode(this.refs.weight).value.trim());
+    if(weight>0){
+      weight-= 5; 
+    }
+    React.findDOMNode(this.refs.weight).value=weight;
+  },
+
+
+  addToReps(event) {
+    event.preventDefault();
+    var reps = Number(React.findDOMNode(this.refs.reps).value.trim());
+    reps+= 1;
+    React.findDOMNode(this.refs.reps).value=reps;
+  },
+
+  subtractFromReps(event) {
+    event.preventDefault();
+    var reps = Number(React.findDOMNode(this.refs.reps).value.trim());
+    if(reps>0){
+      reps-= 1;  
+    }
+    
+    React.findDOMNode(this.refs.reps).value=reps;
+  },
 
   handleSubmit(event) {
     event.preventDefault();
  
     // Find the text field via the React ref
-    var reps = React.findDOMNode(this.refs.reps).value.trim();
-    var weight = React.findDOMNode(this.refs.weight).value.trim();
-    Sets.insert({
-      reps: reps,
-      weight: weight,
-      log: this.props.log._id,
-      createdAt: new Date() // current time
-    });
- 
+    var reps = Number(React.findDOMNode(this.refs.reps).value.trim());
+    var weight = Number(React.findDOMNode(this.refs.weight).value.trim());
+    if(reps>= 0 && weight >= 0 ){
+
+      Sets.insert({
+        reps: reps,
+        weight: weight,
+        log: this.props.log._id,
+        createdAt: new Date() // current time
+      });
+       
+    }
     // Clear form
     React.findDOMNode(this.refs.reps).value = "";
     React.findDOMNode(this.refs.weight).value = "";
@@ -57,16 +93,24 @@ Log = React.createClass({
         <ul>
           {this.renderSets()}
         </ul>
-        <form className="new-set" onSubmit={this.handleSubmit}>
+        <form className="new-set">
+            <button type='button' onClick={this.subtractFromWeight}>-</button>
             <input
-              type="text"
+              type="number"
+              min="0"
               ref="weight"
               placeholder="Weight" />
+            <button type='button' onClick={this.addToWeight}>+</button>
+            <br/>
+            <button type='button' onClick={this.subtractFromReps}>-</button>
             <input
-              type="text"
+              type="number"
+              min="0"
               ref="reps"
               placeholder="# of reps" />
-            <button type="submit">Add Set</button>
+            <button type='button' onClick={this.addToReps}>+</button>
+            <br/>
+            <button type="submit" onClick={this.handleSubmit}>Add Set</button>
           </form>
         
       </li>

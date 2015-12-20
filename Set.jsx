@@ -10,13 +10,18 @@ Set = React.createClass({
     Sets.remove(this.props.set._id);
   },
 
+  getZLift(){
+    return(this.props.set.log);
+  },
+
   render() {
     return (
       <li>
         <button className="delete" onClick={this.deleteThisSet}>
           &times;
         </button>
- 		<span className="weight">{this.props.set.weight} </span>
+        
+ 		    <span className="weight">{this.props.set.weight} </span>
         <span className="set">{this.props.set.reps}</span>
       </li>
     );
