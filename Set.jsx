@@ -21,8 +21,8 @@ Set = React.createClass({
           &times;
         </button>
         
- 		    <span className="weight">{this.props.set.weight} </span>
-        <span className="set">{this.props.set.reps}</span>
+ 		    <span className="weight">{this.props.set.weight} lbs, </span>
+        <span className="set">{this.props.set.reps} reps</span>
       </li>
     );
   }
